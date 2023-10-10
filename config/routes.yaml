@@ -2,4 +2,9 @@ controllers:
     resource:
         path: ../src/Controller/
         namespace: App\Controller
+    prefix: '/api'
     type: attribute
+
+app_logout:
+    path: /api/logout
+    methods: GET
