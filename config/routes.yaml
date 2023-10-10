@@ -6,5 +6,5 @@ controllers:
     type: attribute
 
 app_logout:
-    path: /api/logout
+    path: /app/logout
     methods: GET
