@@ -11,7 +11,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class LoginController extends AbstractController
 {
-    #[Route('/app/login', name: 'app_login', methods: ['POST', 'GET'])]
+    #[Route('/login', name: 'app_login', methods: ['POST', 'GET'])]
     public function login(#[CurrentUser] ?User $user): Response
     {
         if(null === $user){
