@@ -66,7 +66,7 @@ class ToolsController extends AbstractController
         return $this->json($data, 201);
     }
 
-    #[Route('/tools/{tag}', name: 'tools_find_tag', methods: ['GET'])]
+    #[Route('/tools/tag/{tag}', name: 'tools_find_tag', methods: ['GET'])]
     public function findByTag(string $tag, ToolsRepository $toolsRepository, Request $request): Response
     {
         $toolsArr = $toolsRepository->findByTagName($tag);
