@@ -21,15 +21,18 @@ class ToolsRepository extends ServiceEntityRepository
         parent::__construct($registry, Tools::class);
     }
     
-    public function findByTagName(string $value): array
+    public function findByTagName(string $value, int $userId): array
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.tags like :val')
+            ->andWhere('t.user_tool = :user_id')
             ->setParameter('val', '%'.$value.'%')
+            ->setParameter('user_id', $userId)
             ->orderBy('t.id', 'ASC')
             ->getQuery()
             ->getResult();
     }
+
 //    /**
 //     * @return Tools[] Returns an array of Tools objects
 //     */
