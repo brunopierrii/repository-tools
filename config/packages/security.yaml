@@ -47,7 +47,12 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
-        - { path: /home, roles: ROLE_USER }
+        - { path: /home, roles: [ROLE_ADMIN, ROLE_USER] }
+        - { path: /api/tools, roles: [ROLE_ADMIN, ROLE_USER] }  
+        - { path: /api/tools/new, roles: [ROLE_ADMIN, ROLE_USER] }
+        - { path: /api/tools/tag/[a-zA-Z0-9-]+, roles: [ROLE_ADMIN, ROLE_USER] }
+        - { path: /api/tools/edit/\d+, roles: [ROLE_ADMIN, ROLE_USER] }
+        - { path: /api/tools/delete/\d+, roles: [ROLE_ADMIN, ROLE_USER] }
 
 when@test:
     security:
