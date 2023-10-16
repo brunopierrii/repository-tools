@@ -26,6 +26,10 @@ class Tools
     #[ORM\Column(type: Types::TEXT)]
     private ?string $tags = null;
 
+    #[ORM\ManyToOne(inversedBy: 'tools')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user_tool = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +79,18 @@ class Tools
     public function setTags(string $tags): static
     {
         $this->tags = $tags;
+
+        return $this;
+    }
+
+    public function getUserTool(): ?User
+    {
+        return $this->user_tool;
+    }
+
+    public function setUserTool(?User $user_tool): static
+    {
+        $this->user_tool = $user_tool;
 
         return $this;
     }
