@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
+use Doctrine\DBAL\Driver\PDO\Exception as PDOException;
 use Doctrine\DBAL\Driver\PgSQL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,42 +17,46 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
     #[Route('/app/register', name: 'app_register', methods: ['POST'])]
-    public function register(Request $request, UserPasswordHasherInterface $hashedPass, EntityManagerInterface $entityManagerInterface): Response
+    public function register(Request $request, UserPasswordHasherInterface $hashedPass, EntityManagerInterface $entityManagerInterface, UserRepository $userRepository): Response
     {
-        $data = $request->getContent();
-        $data = json_decode($data);
-
         try {
 
-            if($data){
-                $user = new User();
-                $user->setName($data->name);
-                $user->setEmail($data->email);
-                $user->setPassword(
-                    $hashedPass->hashPassword(
-                        $user,
-                        $data->password
-                    )
-                );
+            $data = json_decode($request->getContent());
 
-                $user->setRoles(['ROLE_USER']);
+            $checkUser = $userRepository->findBy(['email' => $data->email]);
 
-                $entityManagerInterface->persist($user);
-                $entityManagerInterface->flush();
+            if($checkUser){
 
-                $data->id = $user->getId();
-            } else {
-                throw new Exception('Opss....');
+                return $this->json([
+                    'message' => 'User already exists'
+                ], Response::HTTP_BAD_REQUEST);
             }
-            
-        } catch (Exception $e) {
-            return $this->json([
-                'message' => $e->getMessage()
-            ], 404);
-        }
 
-        return $this->json([
-            'email' => $user->getEmail()
-        ]);
+            $user = new User();
+            $user->setName($data->name);
+            $user->setEmail($data->email);
+
+            $user->setPassword(
+                $hashedPass->hashPassword(
+                    $user,
+                    $data->password
+                )
+            );
+
+            $user->setRoles(['ROLE_USER']);
+
+            $entityManagerInterface->persist($user);
+            $entityManagerInterface->flush();
+
+            return $this->json([
+                'message' => 'Record save success',
+                'email' => $user->getEmail()
+            ], Response::HTTP_CREATED);
+            
+        } catch (PDOException $e) {
+            return $this->json([
+                'message' => 'Record not save'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
