@@ -19,7 +19,7 @@ class ToolsController extends AbstractController
     #[Route('/tools', name: 'tools_list_all', methods: ['GET'])]
     public function showToolsAll(ToolsRepository $toolsRepository, #[CurrentUser] ?User $user): Response
     {   
-        $tools = $toolsRepository->findBy(['user_tool' => $user->getId()], ['id' => 'ASC']);
+        $tools = $toolsRepository->findBy(['user_tool' => $user->getId()], ['id' => 'DESC']);
 
         $response = [];
         foreach ($tools as $tool) {
