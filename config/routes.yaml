@@ -7,4 +7,4 @@ controllers:
 
 app_logout:
     path: /app/logout
-    methods: GET
+    # methods: GET
